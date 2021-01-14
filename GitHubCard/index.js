@@ -15,12 +15,23 @@ axios
 .get("https://api.github.com/users/emmac124")
 .then((res) => {
   console.log(axios.get("https://api.github.com/users/emmac124"));
-  const name = res.data.name;
-  const 
+  userMaker(res.data);
 })
 .catch(err => {
   console.log(err);
 })
+
+axios
+      .get(`https://api.github.com/users/emmac124/following`)
+      .then(res => {
+        followersArray.forEach( newUser => {
+          userMaker(newUser.data);
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
 /*
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
@@ -37,7 +48,7 @@ axios
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [tetondan,dustinmyers,justsml,luishrd,bigknell];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -59,7 +70,7 @@ const followersArray = [];
     </div>
 */
 
-function userCardMaker( {name, login, location, url, followers, following, bio} ){
+function userMaker( user ){
 
   const userCard = document.createElement('div');
   const userImg = document.createElement('img');
@@ -89,19 +100,33 @@ function userCardMaker( {name, login, location, url, followers, following, bio} 
   usersName.classList.add('name');
   userName.classList.add('username');
 
-  userImg.src('"https://avatars3.githubusercontent.com/u/74630101?v=4"');
-  usersName.textContent = name;
-  userName.textContent = login;
-  userLocation.textContent = `Location: ${location}`;
+  userImg.setAttribute('src', user.avatar_url);
+  usersName.textContent = user.name;
+  userName.textContent = user.login;
+  userLocation.textContent = `Location: ${user.location}`;
   userProfile.textContent = 'Profile: ';
-  userAddress.textContent = url;
-  userFollowers.textContent = `Followers: ${followers}`;
-  userFollowing.textContent =  `Following: ${following}`;
-  userBio.textContent = `Bio: ${bio}`;
-
+  userAddress.setAttribute('href', `${user.html_url}`);
+  userFollowers.textContent = `Followers: ${user.followers}`;
+  userFollowing.textContent =  `Following: ${user.following}`;
+  userBio.textContent = `Bio: ${user.bio}`;
   
+  // followersArray.forEach( username => {
+  //   axios
+  //     .get(`https://api.github.com/users/${username}/following`)
+  //     .then(res => {
+  //       userMaker(res.data)
+  //       cards.appendChild(userMaker)
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     })
+  // })
 
+  document.querySelector('.cards').appendChild(userCard);
+
+  return userCard;
 }
+
 
 /*
   List of LS Instructors Github username's:
