@@ -3,7 +3,7 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+import axios from 'axios';
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -11,7 +11,16 @@
 
     Skip to STEP 3.
 */
-
+axios
+.get("https://api.github.com/users/emmac124")
+.then((res) => {
+  console.log(axios.get("https://api.github.com/users/emmac124"));
+  const name = res.data.name;
+  const 
+})
+.catch(err => {
+  console.log(err);
+})
 /*
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
@@ -49,6 +58,50 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function userCardMaker( {name, login, location, url, followers, following, bio} ){
+
+  const userCard = document.createElement('div');
+  const userImg = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const usersName = document.createElement('h3');
+  const userName = document.createElement('p');
+  const userLocation = document.createElement('p');
+  const userProfile = document.createElement('p');
+  const userAddress = document.createElement('a');
+  const userFollowers = document.createElement('p');
+  const userFollowing = document.createElement('p');
+  const userBio = document.createElement('p');
+
+  userCard.appendChild(userImg);
+  userCard.appendChild(cardInfo);
+  cardInfo.appendChild(usersName);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(userLocation);
+  cardInfo.appendChild(userProfile);
+  userProfile.appendChild(userAddress);
+  cardInfo.appendChild(userFollowers);
+  cardInfo.appendChild(userFollowing);
+  cardInfo.appendChild(userBio);
+
+  userCard.classList.add('card');
+  cardInfo.classList.add('card-info');
+  usersName.classList.add('name');
+  userName.classList.add('username');
+
+  userImg.src('"https://avatars3.githubusercontent.com/u/74630101?v=4"');
+  usersName.textContent = name;
+  userName.textContent = login;
+  userLocation.textContent = `Location: ${location}`;
+  userProfile.textContent = 'Profile: ';
+  userAddress.textContent = url;
+  userFollowers.textContent = `Followers: ${followers}`;
+  userFollowing.textContent =  `Following: ${following}`;
+  userBio.textContent = `Bio: ${bio}`;
+
+  
+
+}
 
 /*
   List of LS Instructors Github username's:
