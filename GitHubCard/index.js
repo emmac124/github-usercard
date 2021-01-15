@@ -11,27 +11,18 @@ import axios from 'axios';
 
     Skip to STEP 3.
 */
-axios
-.get("https://api.github.com/users/emmac124")
-.then((res) => {
-  console.log(axios.get("https://api.github.com/users/emmac124"));
-  userMaker(res.data);
-})
-.catch(err => {
-  console.log(err);
-})
 
-axios
-      .get(`https://api.github.com/users/emmac124/following`)
-      .then(res => {
-        followersArray.forEach( newUser => {
-          userMaker(newUser.data);
-        })
-      })
-      .catch(err => {
-        console.log(err);
-      })
+const cards = document.querySelector('.cards');
 
+const api = axios.get('https://api.github.com/users/emmac124');
+api.then( ( res ) =>{
+  cards.appendChild( userMaker( res ) );
+  console.log(res);
+})
+api.catch( ( error ) =>{
+  console.log(error);
+})
+    
 /*
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
@@ -47,8 +38,24 @@ axios
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
+const followersArray = [
+  'tetondan',
+  'dustinmyers',
+  'justsml',
+  'luishrd',
+  'bigknell',
+  'CCooper92'
+];
 
-const followersArray = [tetondan,dustinmyers,justsml,luishrd,bigknell];
+followersArray.forEach( ( user ) =>{
+  axios.get( `https://api.github.com/users/${user}` )
+  .then( ( res ) => {
+    cards.appendChild( userMaker( res ) );
+  })
+  .catch( ( error ) =>{
+    console.log( error );
+  })
+} )
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -84,49 +91,35 @@ function userMaker( user ){
   const userFollowing = document.createElement('p');
   const userBio = document.createElement('p');
 
+  userCard.classList.add('card');
+  cardInfo.classList.add('card-info');
+  usersName.classList.add('name');
+  userName.classList.add('username');
+
+  userImg.setAttribute('src', user.data.avatar_url);
+  usersName.textContent = user.data.name;
+  userName.textContent = user.data.login;
+  userLocation.textContent = `Location: ${user.data.location}`;
+  userProfile.textContent = 'Profile: ';
+  userAddress.setAttribute('href', `${user.data.html_url}`);
+  userAddress.textContent = user.data.html_url;
+  userFollowers.textContent = `Followers: ${user.data.followers}`;
+  userFollowing.textContent =  `Following: ${user.data.following}`;
+  userBio.textContent = `Bio: ${user.data.bio}`;
+
+  userProfile.appendChild(userAddress);
   userCard.appendChild(userImg);
   userCard.appendChild(cardInfo);
   cardInfo.appendChild(usersName);
   cardInfo.appendChild(userName);
   cardInfo.appendChild(userLocation);
   cardInfo.appendChild(userProfile);
-  userProfile.appendChild(userAddress);
   cardInfo.appendChild(userFollowers);
   cardInfo.appendChild(userFollowing);
   cardInfo.appendChild(userBio);
 
-  userCard.classList.add('card');
-  cardInfo.classList.add('card-info');
-  usersName.classList.add('name');
-  userName.classList.add('username');
-
-  userImg.setAttribute('src', user.avatar_url);
-  usersName.textContent = user.name;
-  userName.textContent = user.login;
-  userLocation.textContent = `Location: ${user.location}`;
-  userProfile.textContent = 'Profile: ';
-  userAddress.setAttribute('href', `${user.html_url}`);
-  userFollowers.textContent = `Followers: ${user.followers}`;
-  userFollowing.textContent =  `Following: ${user.following}`;
-  userBio.textContent = `Bio: ${user.bio}`;
-  
-  // followersArray.forEach( username => {
-  //   axios
-  //     .get(`https://api.github.com/users/${username}/following`)
-  //     .then(res => {
-  //       userMaker(res.data)
-  //       cards.appendChild(userMaker)
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     })
-  // })
-
-  document.querySelector('.cards').appendChild(userCard);
-
   return userCard;
 }
-
 
 /*
   List of LS Instructors Github username's:
